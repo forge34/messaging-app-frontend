@@ -2,15 +2,13 @@ import "../styles/css/chat-section.css";
 import ChatCard from "../components/chat-card";
 import SearchInput from "../components/search-input";
 import { useQuery } from "@tanstack/react-query";
-import { getUserConversations } from "../utils/queries";
+import { conversationLoader, getUserConversations } from "../utils/queries";
 import { ConversationSchema } from "../utils/schema";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
 import { useMemo } from "react";
 import { last } from "../utils/functions";
 
-export default function ChatSection() {
-  const { data } = useQuery(getUserConversations());
-
+function useSortedConversations(data:ConversationSchema[]) {
   const sortedConversation = useMemo(() => {
     return data?.sort((a: ConversationSchema, b: ConversationSchema) => {
       if (!last(a.messages) || !last(b.messages)) return 0;
@@ -24,6 +22,18 @@ export default function ChatSection() {
       return 0;
     });
   }, [data]);
+
+  return sortedConversation
+}
+
+export default function ChatSection() {
+  const initialData = useLoaderData() as Awaited<
+
+    ReturnType<ReturnType<typeof conversationLoader>>
+
+  >
+  const { data } = useQuery({ ...getUserConversations() ,initialData});
+  const sortedConversation = useSortedConversations(data)
 
   return (
     <div className="chat-section">
