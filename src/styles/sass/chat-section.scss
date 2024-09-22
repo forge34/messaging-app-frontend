@@ -24,6 +24,14 @@
   }
 }
 
+@media screen and (max-width: 768px) {
+  .chat-section {
+    grid-row: 1/ 2;
+    grid-column: 1/ -1;
+    border-radius: 0;
+  }
+}
+
 .conversation-box {
   grid-column: 2/-1;
   grid-row: 1 / -1;
