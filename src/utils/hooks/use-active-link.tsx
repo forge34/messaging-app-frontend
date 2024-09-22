@@ -1,19 +1,14 @@
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-export function useActiveLink({
-  link,
-  exact = false,
-}: {
-  link: string;
-  exact: boolean;
-}) {
+export function useActiveLink({ link }: { link: string }) {
   const location = useLocation();
-  let contains;
-  if (!exact) {
-    contains = location.pathname.includes(link);
-  } else contains = location.pathname === "link";
+  const [isActive, setIsActive] = useState(false);
 
-  const selected = contains ? "selected" : "";
+  useEffect(() => {
+    setIsActive(location.pathname.includes(link));
+  }, [location.pathname, link]);
 
-  return { selected, contains };
+  const selected = isActive ? "selected" : "";
+  return { selected, isActive };
 }
